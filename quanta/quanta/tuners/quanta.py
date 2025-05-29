@@ -80,7 +80,11 @@ class QuanTAModel(torch.nn.Module):
                   "sum_mode": self.peft_config.sum_mode, "initialize_mode": self.peft_config.initialize_mode, }
         key_list = [key for key, _ in self.model.named_modules()]
         for key in key_list:
-            if isinstance(self.peft_config.target_modules, str):
+            # add "all" support
+            if len(self.peft_config.target_modules) == 1 and self.peft_config.target_modules[0] == "all":
+                from llamafactory.model.model_utils.misc import find_all_linear_modules
+                target_module_found = find_all_linear_modules(self.model, False)
+            elif isinstance(self.peft_config.target_modules, str):
                 target_module_found = re.fullmatch(self.peft_config.target_modules, key)
             else:
                 target_module_found = any(key.endswith(target_key) for target_key in self.peft_config.target_modules)
