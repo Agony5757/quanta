@@ -79,6 +79,8 @@ class QuanTAModel(torch.nn.Module):
                   "merge_weights": (self.peft_config.merge_weights or self.peft_config.inference_mode),
                   "sum_mode": self.peft_config.sum_mode, "initialize_mode": self.peft_config.initialize_mode, }
         key_list = [key for key, _ in self.model.named_modules()]
+
+
         for key in key_list:
             # add "all" support
             if len(self.peft_config.target_modules) == 1 and self.peft_config.target_modules[0] == "all":
